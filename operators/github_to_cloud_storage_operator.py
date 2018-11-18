@@ -5,7 +5,6 @@ import json
 
 from airflow.utils.decorators import apply_defaults
 from airflow.models import BaseOperator
-from airflow.hooks import S3Hook, GoogleCloudStorageHook
 
 from github_plugin.hooks.github_hook import GithubHook
 
@@ -112,6 +111,7 @@ class GithubToCloudStorageOperator(BaseOperator):
         output = '\n'.join([json.dumps(flatten(record)) for record in output])
 
         if self.destination.lower() == 's3':
+            from airflow.hooks import S3Hook
             s3 = S3Hook(self.dest_conn_id)
 
             s3.load_string(
@@ -124,6 +124,7 @@ class GithubToCloudStorageOperator(BaseOperator):
             s3.connection.close()
 
         elif self.destination.lower() == 'gcs':
+            from airflow.hooks import GoogleCloudStorageHook
             with NamedTemporaryFile('w') as tmp:
                 tmp.write(output)
 
