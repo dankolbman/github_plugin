@@ -121,7 +121,6 @@ class GithubToCloudStorageOperator(BaseOperator):
                 replace=True
             )
 
-            s3.connection.close()
 
         elif self.destination.lower() == 'gcs':
             from airflow.hooks import GoogleCloudStorageHook
